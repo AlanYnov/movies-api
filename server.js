@@ -10,6 +10,10 @@ const http = require("http");
 const app = express();
 const server = http.Server(app);
 
+// Documentation imports
+const swagger = require('./swagger');
+swagger(app);
+
 // Enable CORS with environment variable for the origin
 const cors = require("cors");
 app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));

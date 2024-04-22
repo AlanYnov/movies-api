@@ -1,15 +1,23 @@
 # Movies API
 
-Welcome to the Alan's Movies API. This API is made to validate the pratical exercise .
+Welcome to the Alan's Movies API. This API is made to validate the pratical exercise for "Web Service" module.
 
 ## Table of Contents
 
+- [Prerequisites](#prerequisites)
 - [Getting Started](#getting-started)
 - [Features](#features)
 - [Technologies](#technologies)
 - [Environment Variables](#environment-variables)
 - [Usage](#usage)
 - [Database Configuration](#database-configuration)
+
+## Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- [Node.js](https://nodejs.org/en/download/): Version 20.x recommended.
+- [MySQL](https://dev.mysql.com/downloads/): Version 8.x recommended.
 
 ## Getting Started
 
@@ -25,7 +33,7 @@ To get started with the Events API, follow the instructions below:
 
 5. **Start the Server:** Run `npm start` to start the API server. By default, it runs on port 4000, but you can configure the port in your `.env` file.
 
-6. **API Documentation:** Explore the API endpoints and their documentation to understand how to interact with the API.
+6. ***API Documentation:** Explore the API endpoints and their documentation using Swagger UI. The documentation is accessible at `/api-docs` when the API server is running.
 
 ## Features
 
@@ -59,7 +67,7 @@ Copy the `.env.example` file to a new file named `.env` and fill in the necessar
 
 ## Usage
 
-API endpoints and their usage are thoroughly documented in the [API Documentation](api-documentation.md). Refer to the API documentation for information on making requests and handling responses.
+API endpoints and their usage are thoroughly documented using Swagger UI. You can access the API documentation at `/api-docs` when the API server is running. Refer to the documentation for information on making requests and handling responses.
 
 ## Database Configuration
 
@@ -85,3 +93,7 @@ Run the `initDB.sh` script to create the database and user automatically:
 ```bash
 sh initDB.sh
 ```
+
+## Contact
+
+If you have any questions or run into any issues while using the Movies API, please contact the API's developper on Teams.

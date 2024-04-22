@@ -57,18 +57,65 @@ class Movie {
   }
 
   static createMovie(movie) {
-    const { title, description, release_date, image_path, rating, category_id } = movie;
+    const {
+      title,
+      description,
+      release_date,
+      image_path,
+      rating,
+      category_id,
+    } = movie;
     return new Promise((resolve, reject) => {
-        const query = `INSERT INTO movies (title, description, release_date, image_path, rating, category_id) VALUES (?, ?, ?, ?, ?, ?)`;
-        connection.query(query, [title, description, release_date, image_path, rating, category_id], (error, results) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve({ id: results.insertId, ...movie });
-            }
-        });
+      const query = `INSERT INTO movies (title, description, release_date, image_path, rating, category_id) VALUES (?, ?, ?, ?, ?, ?)`;
+      connection.query(
+        query,
+        [title, description, release_date, image_path, rating, category_id],
+        (error, results) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve({ id: results.insertId, ...movie });
+          }
+        }
+      );
     });
-}
+  }
+
+  // Update a movie by ID
+  static updateMovie(movieId, movieData) {
+    return new Promise((resolve, reject) => {
+      const query = `UPDATE movies SET ? WHERE id = ?`;
+      connection.query(query, [movieData, movieId], (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          if (results.affectedRows === 0) {
+            reject({ error: "Movie not found" });
+          } else {
+            resolve({ message: "Movie updated successfully" });
+          }
+        }
+      });
+    });
+  }
+
+  // Delete a movie by ID
+  static deleteMovie(movieId) {
+    return new Promise((resolve, reject) => {
+      const query = `DELETE FROM movies WHERE id = ?`;
+      connection.query(query, [movieId], (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          if (results.affectedRows === 0) {
+            reject({ error: "Movie not found" });
+          } else {
+            resolve({ message: "Movie deleted successfully" });
+          }
+        }
+      });
+    });
+  }
 }
 
 module.exports = Movie;

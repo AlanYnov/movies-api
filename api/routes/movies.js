@@ -1,12 +1,204 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const controllers = require('../controllers/movies');
+const controllers = require("../controllers/movies");
 
-//Movies routes
-router.get('/movies/:id', controllers.getMovie);
-router.get('/movies', controllers.getMovies);
-router.post('/movies', controllers.createMovie);
-// router.put('/movies/:id', controllers.updateMovie);
-// router.delete('/movies/:id', controllers.deleteMovie);
+// Movies routes
+
+/**
+ * @openapi
+ * /movies/{id}:
+ *   get:
+ *     security:
+ *       - BearerAuth: []
+ *     summary: Get a movie by ID
+ *     description: Retrieve a movie from the database by its ID.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the movie to retrieve
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Movie found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Movie'
+ *           application/xml:
+ *             schema:
+ *               $ref: '#/components/schemas/Movie'
+ *       404:
+ *         description: Movie not found
+ *       500:
+ *         description: Server error
+ */
+router.get("/movies/:id", controllers.getMovie);
+
+/**
+ * @openapi
+ * /movies:
+ *   get:
+ *     security:
+ *       - BearerAuth: []
+ *     summary: Get all movies
+ *     description: Retrieve a list of all movies from the database.
+ *     parameters:
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Number of movies to return (default is 10)
+ *       - in: query
+ *         name: offset
+ *         schema:
+ *           type: integer
+ *         description: Number of movies to skip (default is 0)
+ *       - in: query
+ *         name: category
+ *         schema:
+ *           type: string
+ *         description: Filter movies by category
+ *     responses:
+ *       200:
+ *         description: List of movies
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Movies fetched successfully"
+ *                 total:
+ *                   type: integer
+ *                   example: 5
+ *                 movies:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Movie'
+ *           application/xml:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Movies fetched successfully"
+ *                 total:
+ *                   type: integer
+ *                   example: 5
+ *                 movies:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Movie'
+ *       404:
+ *         description: Movies not found
+ *       500:
+ *         description: Server error
+ */
+router.get("/movies", controllers.getMovies);
+
+/**
+ * @openapi
+ * /movies:
+ *   post:
+ *     security:
+ *       - BearerAuth: []
+ *     summary: Create a new movie
+ *     description: Add a new movie to the database.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/MovieInput'
+ *     responses:
+ *       201:
+ *         description: Movie created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Movie'
+ *       422:
+ *         description: Missing required fields
+ *       500:
+ *         description: Server error
+ */
+router.post("/movies", controllers.createMovie);
+
+/**
+ * @openapi
+ * /movies/{id}:
+ *   put:
+ *     security:
+ *       - BearerAuth: []
+ *     summary: Update a movie
+ *     description: Update an existing movie in the database.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the movie to update
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       description: Updated movie data (optional)
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               description:
+ *                 type: string
+ *             example:
+ *               description: "new description"
+ *     responses:
+ *       201:
+ *         description: Movie updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Movie'
+ *       404:
+ *         description: Movie not found
+ *       500:
+ *         description: Server error
+ */
+router.put("/movies/:id", controllers.updateMovie);
+
+/**
+ * @openapi
+ * /movies/{id}:
+ *   delete:
+ *     security:
+ *       - BearerAuth: []
+ *     summary: Delete a movie
+ *     description: Delete a movie from the database.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the movie to delete
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Movie deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Movie deleted successfully
+ *       404:
+ *         description: Movie not found
+ *       500:
+ *         description: Server error
+ */
+router.delete("/movies/:id", controllers.deleteMovie);
 
 module.exports = router;
