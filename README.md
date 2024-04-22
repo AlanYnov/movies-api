@@ -63,15 +63,13 @@ API endpoints and their usage are thoroughly documented in the [API Documentatio
 
 ## Database Configuration
 
-### Manual Create Database
+### Manual Configuration
 
 In MySQL, create the `movies_db` database with the following command:
 
 ```sql
 CREATE DATABASE movies_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
-
-### Manual Create User
 
 Create a MySQL user named `movies_user` with a password of your choice. Grant all privileges to this user on the `movies_db` database.
 
@@ -80,7 +78,7 @@ CREATE USER 'movies_user'@'localhost' IDENTIFIED BY 'your_password';
 GRANT ALL PRIVILEGES ON `movies_db`.* TO 'movies_user'@'localhost';
 ```
 
-### Automatic Database and user creation
+### Automatic Configuration
 
 Run the `initDB.sh` script to create the database and user automatically:
 
