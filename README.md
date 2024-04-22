@@ -71,6 +71,16 @@ API endpoints and their usage are thoroughly documented using Swagger UI. You ca
 
 ## Database Configuration
 
+### Automatic Configuration
+
+Run the `initDB.sh` script localted at `/database/scripts` to create the database and user automatically:
+
+```bash
+sh initDB.sh
+```
+
+The error logs will be shown in the following file: `/database/logs/error.log`.
+
 ### Manual Configuration
 
 In MySQL, create the `movies_db` database with the following command:
@@ -86,13 +96,10 @@ CREATE USER 'movies_user'@'localhost' IDENTIFIED BY 'your_password';
 GRANT ALL PRIVILEGES ON `movies_db`.* TO 'movies_user'@'localhost';
 ```
 
-### Automatic Configuration
+After creating the database and a user, copy and execute the following SQL commands found in `/database/sql`:
 
-Run the `initDB.sh` script to create the database and user automatically:
-
-```bash
-sh initDB.sh
-```
+- **Migrations:** Run all migration files.
+- **Inserts:** Run the insertion files to populate the database with test data.
 
 ## Contact
 
