@@ -25,7 +25,7 @@ To get started with the Events API, follow the instructions below:
 
 1. **Clone the Repository:** Clone this repository to your local machine.
 
-2. **Environment Configuration:** Create a `.env` file at the root of the project and configure your environment variables, including database connection details, API keys, and other settings.
+2. **Environment Configuration:** Create a `.env` file at the root of the project and configure your environment variables, including database connection details, API keys, and other settings, more details [here](#environment-variables).
 
 3. **Install Dependencies:** Run `npm install` to install all project dependencies.
 
@@ -39,7 +39,8 @@ To get started with the Events API, follow the instructions below:
 
 The Movies API offers the following key features:
 
-- **Movies Management:** Create, retrieve, update, and delete events.
+- **Movies Management:** Create, retrieve, update, and delete movies.
+- **Files:** Upload and get files.
 
 ## Technologies
 
