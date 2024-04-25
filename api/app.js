@@ -14,7 +14,7 @@ const app = express();
 app.use(bodyParser.json({ limit: "50mb" }));
 
 // API Key Authentication Middleware
-app.use(apiKeyMiddleware);
+//app.use(apiKeyMiddleware);
 
 // Rate Limiting for API requests
 app.use(limiter);

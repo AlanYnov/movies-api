@@ -29,32 +29,28 @@ const options = {
           type: "object",
           properties: {
             id: { type: "integer" },
-            title: { type: "string" },
+            title: { type: "string", example: "The Film" },
             description: { type: "string" },
             release_date: { type: "string", format: "date-time" },
             image_path: { type: "string" },
-            rating: { type: "number" },
+            rating: { type: "number", example: 4 },
             created_at: { type: "string", format: "date-time" },
             updated_at: { type: "string", format: "date-time" },
-            category_id: { type: "integer" },
           },
-          required: ["id", "title", "release_date", "category_id"],
+          required: ["id", "title", "release_date"],
         },
         MovieInput: {
           type: "object",
           properties: {
-            title: { type: "string" },
+            title: { type: "string", example: "The Film" },
             description: { type: "string" },
             release_date: { type: "string", format: "date-time" },
-            image_path: { type: "string" },
-            rating: { type: "number" },
-            category_id: { type: "integer" },
+            rating: { type: "number", example: 4 },
           },
           required: [
             "title",
             "description",
             "release_date",
-            "image_path",
             "rating",
             "category_id",
           ],
@@ -66,8 +62,6 @@ const options = {
 };
 
 const specs = swaggerJsdoc(options);
-
-console.log(specs);
 
 module.exports = (app) => {
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));

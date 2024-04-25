@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const controllers = require("../controllers/movies");
+const { upload } = require("../middlewares/upload");
 
 // Movies routes
 
@@ -60,6 +61,11 @@ router.get("/movies/:id", controllers.getMovie);
  *         schema:
  *           type: string
  *         description: Filter movies by category
+ *       - in: query
+ *         name: searchTerm
+ *         schema:
+ *           type: string
+ *         description: Search movies by title or description
  *     responses:
  *       200:
  *         description: List of movies
@@ -73,7 +79,19 @@ router.get("/movies/:id", controllers.getMovie);
  *                   example: "Movies fetched successfully"
  *                 total:
  *                   type: integer
- *                   example: 5
+ *                   example: 20
+ *                 limit:
+ *                   type: integer
+ *                   example: 10
+ *                 offset:
+ *                   type: integer
+ *                   example: 0
+ *                 prev:
+ *                   type: string
+ *                   example: http://localhost:4000/movies?limit=2&offset=0&category="
+ *                 next:
+ *                   type: string
+ *                   example: http://localhost:4000/movies?limit=2&offset=4&category="
  *                 movies:
  *                   type: array
  *                   items:
@@ -87,7 +105,19 @@ router.get("/movies/:id", controllers.getMovie);
  *                   example: "Movies fetched successfully"
  *                 total:
  *                   type: integer
- *                   example: 5
+ *                   example: 20
+ *                 limit:
+ *                   type: integer
+ *                   example: 10
+ *                 offset:
+ *                   type: integer
+ *                   example: 0
+ *                 prev:
+ *                   type: string
+ *                   example: http://localhost:4000/movies?limit=2&offset=0&category="
+ *                 next:
+ *                   type: string
+ *                   example: http://localhost:4000/movies?limit=2&offset=4&category="
  *                 movies:
  *                   type: array
  *                   items:
@@ -110,9 +140,20 @@ router.get("/movies", controllers.getMovies);
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
- *             $ref: '#/components/schemas/MovieInput'
+ *             type: object
+ *             properties:
+ *               movie:
+ *                 $ref: '#/components/schemas/MovieInput'
+ *               categories:
+ *                 type: array
+ *                 items:
+ *                   type: integer
+ *                 example: ["Drama", "Comedy"]
+ *               file:
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       201:
  *         description: Movie created successfully
@@ -125,7 +166,7 @@ router.get("/movies", controllers.getMovies);
  *       500:
  *         description: Server error
  */
-router.post("/movies", controllers.createMovie);
+router.post("/movies", upload.single('file'), controllers.createMovie);
 
 /**
  * @openapi
