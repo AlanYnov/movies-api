@@ -4,9 +4,10 @@ class Movie {
   static getMovies(limit, offset, category, searchTerm) {
     const query = 
       `SELECT m.* FROM movies AS m 
+      ${category ? `
       JOIN category_movie AS cm ON cm.movie_id = m.id 
       JOIN categories AS c ON cm.category_id = c.id 
-      ${category ? 'WHERE c.label = ?' : ''}
+      WHERE c.label = ?` : ''}
       ${searchTerm ? (category ? 'AND' : 'WHERE') + ` (m.title LIKE ? OR m.description LIKE ?)` : ''}
       LIMIT ? OFFSET ?`;
 
@@ -123,9 +124,10 @@ class Movie {
   static countMovies(category, searchTerm) {
     const query =
       `SELECT COUNT(m.id) AS total FROM movies AS m 
+      ${category ? `
       JOIN category_movie AS cm ON cm.movie_id = m.id 
       JOIN categories AS c ON cm.category_id = c.id 
-      ${category ? 'WHERE c.label = ?' : ''}
+      WHERE c.label = ?` : ''}
       ${searchTerm ? (category ? 'AND' : 'WHERE') + ` (m.title LIKE ? OR m.description LIKE ?)` : ''}`;
 
       const queryParams = category ? (searchTerm ? [category, `%${searchTerm}%`, `%${searchTerm}%`] : [category]) : (searchTerm ? [`%${searchTerm}%`, `%${searchTerm}%`] : []);
