@@ -29,7 +29,7 @@ requiredEnv.forEach((env) => {
 });
 
 // Serve images from the img directory
-app.use("/image", express.static(path.join(__dirname, "img")));
+app.use("/image", express.static(path.join(__dirname, "./")));
 
 // Use environment variables or default values for host and port
 const host = process.env.HOST || 'localhost';

@@ -32,8 +32,8 @@ class Movie {
     return new Promise((resolve, reject) => {
       const query = `
         SELECT m.* FROM movies AS m
-        JOIN category_movie AS cm ON cm.movie_id = m.id 
-        JOIN categories AS c ON cm.category_id = c.id 
+        LEFT JOIN category_movie AS cm ON cm.movie_id = m.id 
+        LEFT JOIN categories AS c ON cm.category_id = c.id 
         WHERE m.id = ?`;
       connection.query(query, movieID, (error, results) => {
         if (error) {

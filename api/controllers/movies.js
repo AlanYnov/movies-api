@@ -65,7 +65,7 @@ exports.getMovie = async (req, res) => {
   const movieID = req.params.id;
   try {
     const movie = await Movie.getMovie(movieID);
-
+    console.log(movie)
     // Get all categories for the movie
     const categories = await Movie.getMovieCategories(movie.id);
     movie.categories = categories.map(category => category.label);
@@ -94,7 +94,8 @@ exports.getMovie = async (req, res) => {
 
 // Add a new movie
 exports.createMovie = async (req, res) => {
-  const moviePath = req.file?.path || null;
+  const link = req.protocol + '://' + req.get('host');
+  const moviePath = `${link}/image/${req.file ? req.file.path.replace(/\\/g, '/') : null}`;
   const movieData = JSON.parse(req.body.movie);
   const categories = req.body.categories.split(',') || [];
   console.log(categories)
