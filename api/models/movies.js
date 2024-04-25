@@ -1,18 +1,24 @@
 const connection = require("../../config/db");
 
 class Movie {
-  static getMovies(limit, offset, category) {
-    const query = category
-      ? `SELECT m.*, c.label AS category FROM movies AS m 
-        JOIN categories AS c ON m.category_id = c.id 
-        WHERE c.label = ?
-        LIMIT ? OFFSET ?`
-      : `SELECT * FROM movies LIMIT ? OFFSET ?`;
+  static getMovies(limit, offset, category, searchTerm) {
+    const query = 
+      `SELECT m.* FROM movies AS m 
+      JOIN category_movie AS cm ON cm.movie_id = m.id 
+      JOIN categories AS c ON cm.category_id = c.id 
+      ${category ? 'WHERE c.label = ?' : ''}
+      ${searchTerm ? (category ? 'AND' : 'WHERE') + ` (m.title LIKE ? OR m.description LIKE ?)` : ''}
+      LIMIT ? OFFSET ?`;
 
-    const queryParams = category ? [category, limit, offset] : [limit, offset];
+      console.log(query)
+
+      const queryParams = category
+      ? (searchTerm ? [category, `%${searchTerm}%`, `%${searchTerm}%`, limit, offset] : [category, limit, offset])
+      : (searchTerm ? [`%${searchTerm}%`, `%${searchTerm}%`, limit, offset] : [limit, offset]);
 
     return new Promise((resolve, reject) => {
       connection.query(query, queryParams, (error, results) => {
+        console.log(results)
         if (error) {
           reject(error);
         } else {
@@ -24,7 +30,11 @@ class Movie {
 
   static getMovie(movieID) {
     return new Promise((resolve, reject) => {
-      const query = `SELECT * FROM movies WHERE id = ?`;
+      const query = `
+        SELECT m.* FROM movies AS m
+        JOIN category_movie AS cm ON cm.movie_id = m.id 
+        JOIN categories AS c ON cm.category_id = c.id 
+        WHERE m.id = ?`;
       connection.query(query, movieID, (error, results) => {
         if (error) {
           reject(error);
@@ -35,41 +45,34 @@ class Movie {
     });
   }
 
-  static getMoviesByCategory(categoryName, limit, offset) {
+  static getMovieCategories(movieID) {
     return new Promise((resolve, reject) => {
       const query = `
-          SELECT m.*, c.name FROM movies AS m 
-          JOIN categories AS c ON m.id = c.movie_id 
-          WHERE c.label = ?
-          LIMIT ? OFFSET ?`;
-      connection.query(
-        query,
-        [categoryName, limit, offset],
-        (error, results) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(results[0]);
-          }
+        SELECT c.label FROM categories AS c
+        JOIN category_movie AS cm ON cm.category_id = c.id 
+        WHERE cm.movie_id = ?`;
+      connection.query(query, movieID, (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
         }
-      );
+      });
     });
   }
 
-  static createMovie(movie) {
-    const {
-      title,
-      description,
-      release_date,
-      image_path,
-      rating,
-      category_id,
-    } = movie;
+  static createMovie(movie, moviePath) {
     return new Promise((resolve, reject) => {
-      const query = `INSERT INTO movies (title, description, release_date, image_path, rating, category_id) VALUES (?, ?, ?, ?, ?, ?)`;
+      const query = `INSERT INTO movies (title, description, release_date, image_path, rating) VALUES (?, ?, ?, ?, ?)`;
       connection.query(
         query,
-        [title, description, release_date, image_path, rating, category_id],
+        [
+          movie.title,
+          movie.description,
+          movie.release_date,
+          moviePath,
+          movie.rating,
+        ],
         (error, results) => {
           if (error) {
             reject(error);
@@ -112,6 +115,27 @@ class Movie {
           } else {
             resolve({ message: "Movie deleted successfully" });
           }
+        }
+      });
+    });
+  }
+
+  static countMovies(category, searchTerm) {
+    const query =
+      `SELECT COUNT(m.id) AS total FROM movies AS m 
+      JOIN category_movie AS cm ON cm.movie_id = m.id 
+      JOIN categories AS c ON cm.category_id = c.id 
+      ${category ? 'WHERE c.label = ?' : ''}
+      ${searchTerm ? (category ? 'AND' : 'WHERE') + ` (m.title LIKE ? OR m.description LIKE ?)` : ''}`;
+
+      const queryParams = category ? (searchTerm ? [category, `%${searchTerm}%`, `%${searchTerm}%`] : [category]) : (searchTerm ? [`%${searchTerm}%`, `%${searchTerm}%`] : []);
+
+    return new Promise((resolve, reject) => {
+      connection.query(query, queryParams, (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results[0].total);
         }
       });
     });
