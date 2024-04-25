@@ -8,9 +8,5 @@ CREATE TABLE IF NOT EXISTS `movies` (
     `rating` INT CHECK (`rating` >= 0 AND `rating` <= 5),
     `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
     `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-    `category_id` INT,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-ALTER TABLE `movies`
-    ADD CONSTRAINT `fk_movies_category_id` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE;
