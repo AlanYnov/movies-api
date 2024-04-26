@@ -64,7 +64,7 @@ class Movie {
 
   static createMovie(movie, moviePath) {
     return new Promise((resolve, reject) => {
-      const query = `INSERT INTO movies (title, description, release_date, image_path, rating) VALUES (?, ?, ?, ?, ?)`;
+      const query = `INSERT INTO movies (title, description, release_date, image, rating) VALUES (?, ?, ?, ?, ?)`;
       connection.query(
         query,
         [

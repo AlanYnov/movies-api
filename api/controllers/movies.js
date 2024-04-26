@@ -8,15 +8,23 @@ exports.getMovies = async (req, res) => {
   const offset = parseInt(req.query.offset) || 0;
   const {category, searchTerm} = req.query;
 
-    // Get number of movies
-    const totalMovies = await Movie.countMovies(category, searchTerm);
+  if(limit < 0 || limit > 50){
+    return res.status(422).json({error: "Limit should be between 0 and 50"});
+  }
 
-    // Pagination system
-    const baseUrl = req.protocol + '://' + req.get('host') + req.baseUrl + req.path;
-    const prevOffset = Math.max(0, offset - limit);
-    const nextOffset = offset + limit;
-    const prevLink = (offset > 0) ? `${baseUrl}?limit=${limit}&offset=${prevOffset}&category=${category || ''}` : null;
-    const nextLink = (nextOffset < totalMovies) ? `${baseUrl}?limit=${limit}&offset=${nextOffset}&category=${category || ''}` : null;
+  // Get number of movies
+  const totalMovies = await Movie.countMovies(category, searchTerm);
+
+  if(offset > totalMovies) {
+    return res.status(404).json({error: "Movies not found, your offset is higher than the total number of movies"});
+  }
+
+  // Pagination system
+  const baseUrl = req.protocol + '://' + req.get('host') + req.baseUrl + req.path;
+  const prevOffset = Math.max(0, offset - limit);
+  const nextOffset = offset + limit;
+  const prevLink = (offset > 0) ? `${baseUrl}?limit=${limit}&offset=${prevOffset}&category=${category || ''}` : null;
+  const nextLink = (nextOffset < totalMovies) ? `${baseUrl}?limit=${limit}&offset=${nextOffset}&category=${category || ''}` : null;
 
   try {
     const movies = await Movie.getMovies(limit, offset, category, searchTerm);
@@ -121,7 +129,7 @@ exports.createMovie = async (req, res) => {
         console.log(category);
         const isCategoryExists = await Category.checkIfCategoryExists(category);
         if (!isCategoryExists) {
-          errorMessage = `The category ID ${category} does not exist. `;
+          errorMessage = `The category ${category} does not exist. `;
         }
       }
     }

@@ -1,5 +1,5 @@
 -- Insert data for movies
-INSERT INTO `movies` (`title`, `description`, `release_date`, `rating`, `image_path`) VALUES
+INSERT INTO `movies` (`title`, `description`, `release_date`, `rating`, `image`) VALUES
     ('The Shawshank Redemption', 'Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.', '1994-09-23', 5, 'http://localhost:4000/image/files/movies/shawshank_redemption.jpg'),
     ('The Godfather', 'The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.', '1972-03-24', 5, 'http://localhost:4000/image/files/movies/godfather.jpg'),
     ('The Dark Knight', 'When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.', '2008-07-18', 5, 'http://localhost:4000/image/files/movies/dark_knight.jpg'),

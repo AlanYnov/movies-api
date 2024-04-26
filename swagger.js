@@ -32,7 +32,7 @@ const options = {
             title: { type: "string", example: "The Film" },
             description: { type: "string" },
             release_date: { type: "string", format: "date-time" },
-            image_path: { type: "string" },
+            image: { type: "string" },
             rating: { type: "number", example: 4 },
             created_at: { type: "string", format: "date-time" },
             updated_at: { type: "string", format: "date-time" },

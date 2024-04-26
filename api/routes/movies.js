@@ -50,7 +50,7 @@ router.get("/movies/:id", controllers.getMovie);
  *         name: limit
  *         schema:
  *           type: integer
- *         description: Number of movies to return (default is 10)
+ *         description: Number of movies to return (default is 10, minimum is 0, maximum is 50)
  *       - in: query
  *         name: offset
  *         schema:
