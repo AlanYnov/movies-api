@@ -5,28 +5,34 @@ const convert = require("xml-js");
 //Get all movies
 exports.getMovies = async (req, res) => {
   const limit = parseInt(req.query.limit) || 10;
-  const offset = parseInt(req.query.offset) || 0;
+  const page = parseInt(req.query.page) || 1;
   const {category, searchTerm} = req.query;
 
   if(limit < 0 || limit > 50){
     return res.status(422).json({error: "Limit should be between 0 and 50"});
   }
 
-  // Get number of movies
-  const totalMovies = await Movie.countMovies(category, searchTerm);
-
-  if(offset > totalMovies) {
-    return res.status(404).json({error: "Movies not found, your offset is higher than the total number of movies"});
-  }
-
-  // Pagination system
-  const baseUrl = req.protocol + '://' + req.get('host') + req.baseUrl + req.path;
-  const prevOffset = Math.max(0, offset - limit);
-  const nextOffset = offset + limit;
-  const prevLink = (offset > 0) ? `${baseUrl}?limit=${limit}&offset=${prevOffset}&category=${category || ''}` : null;
-  const nextLink = (nextOffset < totalMovies) ? `${baseUrl}?limit=${limit}&offset=${nextOffset}&category=${category || ''}` : null;
-
   try {
+    // Get number of movies
+    const totalMovies = await Movie.countMovies(category, searchTerm);
+    const totalPages = Math.ceil(totalMovies / limit);
+
+    if (page < 1 || page > totalPages) {
+      return res.status(404).json({ error: "Page not found" });
+    }
+
+    const offset = (page - 1) * limit;
+
+    // Pagination system
+    const baseUrl = req.protocol + '://' + req.get('host') + req.baseUrl + req.path;
+    const links = {
+      first: `${baseUrl}?limit=${limit}&page=1${category ? `&category=${category}` : ''}${searchTerm ? `&searchTerm=${searchTerm}` : ''}`,
+      prev: page > 1 ? `${baseUrl}?limit=${limit}&page=${page - 1}${category ? `&category=${category}` : ''}${searchTerm ? `&searchTerm=${searchTerm}` : ''}` : null,
+      next: page < totalPages ? `${baseUrl}?limit=${limit}&page=${page + 1}${category ? `&category=${category}` : ''}${searchTerm ? `&searchTerm=${searchTerm}` : ''}` : null,
+      last: `${baseUrl}?limit=${limit}&page=${totalPages}${category ? `&category=${category}` : ''}${searchTerm ? `&searchTerm=${searchTerm}` : ''}`,
+    };
+
+    // Get movies
     const movies = await Movie.getMovies(limit, offset, category, searchTerm);
 
     //Get all categories for movies
@@ -42,11 +48,13 @@ exports.getMovies = async (req, res) => {
     if (acceptHeader && acceptHeader.includes("application/xml")) {
       const xmlData = convert.js2xml({
         message: "Movies fetched successfully",
-        total: totalMovies,
-        limit,
-        offset,
-        prev: prevLink || null,
-        next: nextLink || null,
+        meta: {
+          total: totalMovies,
+          limit,
+          page,
+          totalPages,
+        },
+        links,
         movies
       }, { compact: true, spaces: 2 });
       res.set("Content-Type", "application/xml");
@@ -54,11 +62,13 @@ exports.getMovies = async (req, res) => {
     } else {
       return res.status(200).json({
         message: "Movies fetched successfully",
-        total: totalMovies,
-        limit,
-        offset,
-        prev: prevLink || null,
-        next: nextLink || null,
+        meta: {
+          total: totalMovies,
+          limit,
+          page,
+          totalPages,
+        },
+        links,
         movies
       });
     }

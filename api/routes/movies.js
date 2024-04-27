@@ -52,10 +52,10 @@ router.get("/movies/:id", controllers.getMovie);
  *           type: integer
  *         description: Number of movies to return (default is 10, minimum is 0, maximum is 50)
  *       - in: query
- *         name: offset
+ *         name: page
  *         schema:
  *           type: integer
- *         description: Number of movies to skip (default is 0)
+ *         description: Number of page (default is 1)
  *       - in: query
  *         name: category
  *         schema:
