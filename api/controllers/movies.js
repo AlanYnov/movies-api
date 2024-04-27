@@ -4,6 +4,7 @@ const convert = require("xml-js");
 
 //Get all movies
 exports.getMovies = async (req, res) => {
+  const link = req.protocol + '://' + req.get('host');
   const limit = parseInt(req.query.limit) || 10;
   const page = parseInt(req.query.page) || 1;
   const {category, searchTerm} = req.query;
@@ -24,7 +25,7 @@ exports.getMovies = async (req, res) => {
     const offset = (page - 1) * limit;
 
     // Pagination system
-    const baseUrl = req.protocol + '://' + req.get('host') + req.baseUrl + req.path;
+    const baseUrl = link + req.baseUrl + req.path;
     const links = {
       first: `${baseUrl}?limit=${limit}&page=1${category ? `&category=${category}` : ''}${searchTerm ? `&searchTerm=${searchTerm}` : ''}`,
       prev: page > 1 ? `${baseUrl}?limit=${limit}&page=${page - 1}${category ? `&category=${category}` : ''}${searchTerm ? `&searchTerm=${searchTerm}` : ''}` : null,
@@ -39,6 +40,7 @@ exports.getMovies = async (req, res) => {
     for (const movie of movies) {
       const categories = await Movie.getMovieCategories(movie.id);
       movie.categories = categories.map(category => category.label);
+      movie.image = `${link}/image/${movie.image}`;
     }
 
     if (!movies) {
@@ -80,10 +82,12 @@ exports.getMovies = async (req, res) => {
 
 //Get movie by ID
 exports.getMovie = async (req, res) => {
+  const link = req.protocol + '://' + req.get('host');
   const movieID = req.params.id;
   try {
     const movie = await Movie.getMovie(movieID);
-    console.log(movie)
+    movie.image = `${link}/image/${movie.image}`;
+
     // Get all categories for the movie
     const categories = await Movie.getMovieCategories(movie.id);
     movie.categories = categories.map(category => category.label);
@@ -112,8 +116,7 @@ exports.getMovie = async (req, res) => {
 
 // Add a new movie
 exports.createMovie = async (req, res) => {
-  const link = req.protocol + '://' + req.get('host');
-  const moviePath = `${link}/image/${req.file ? req.file.path.replace(/\\/g, '/') : null}`;
+  const moviePath = `${req.file ? req.file.path.replace(/\\/g, '/') : null}`;
   const movieData = JSON.parse(req.body.movie);
   const categories = req.body.categories.split(',') || [];
   console.log(categories)

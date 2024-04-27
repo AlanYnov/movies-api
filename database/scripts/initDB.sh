@@ -44,7 +44,7 @@ echo "User '$NEW_USER' created and granted privileges on '$NEW_DB_NAME' database
 cd "$SQL_DIR/migrations" || exit
 
 for file in *.sql; do 
-  echo "To insert: $file"
+  echo "To create: $file"
   mysql -h "$DATABASE_HOST" \
         -u "$DATABASE_USER" \
         -p"$DATABASE_PASSWORD" \
