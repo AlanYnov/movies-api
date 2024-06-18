@@ -11,8 +11,6 @@ class Movie {
       ${searchTerm ? (category ? 'AND' : 'WHERE') + ` (m.title LIKE ? OR m.description LIKE ?)` : ''}
       LIMIT ? OFFSET ?`;
 
-      console.log(query)
-
       const queryParams = category
       ? (searchTerm ? [category, `%${searchTerm}%`, `%${searchTerm}%`, limit, offset] : [category, limit, offset])
       : (searchTerm ? [`%${searchTerm}%`, `%${searchTerm}%`, limit, offset] : [limit, offset]);

@@ -119,7 +119,6 @@ exports.createMovie = async (req, res) => {
   const moviePath = `${req.file ? req.file.path.replace(/\\/g, '/') : null}`;
   const movieData = JSON.parse(req.body.movie);
   const categories = req.body.categories.split(',') || [];
-  console.log(categories)
   const requiredFields = [
     "title",
     "description",
@@ -139,7 +138,6 @@ exports.createMovie = async (req, res) => {
     if(categories.length > 0) {
     // Check if category exists
       for (const category of categories) {
-        console.log(category);
         const isCategoryExists = await Category.checkIfCategoryExists(category);
         if (!isCategoryExists) {
           errorMessage = `The category ${category} does not exist. `;

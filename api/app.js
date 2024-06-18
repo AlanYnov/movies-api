@@ -27,7 +27,7 @@ const routesPath = path.join(__dirname, "./routes");
 fs.readdirSync(routesPath).forEach((file) => {
   if (file.endsWith(".js")) {
     const route = require(`./routes/${file}`);
-    app.use(route);
+    app.use('/api-movie', route);
   }
 });
 

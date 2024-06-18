@@ -33,7 +33,7 @@ app.use("/image", express.static(path.join(__dirname, "./")));
 
 // Use environment variables or default values for host and port
 const host = process.env.HOST || 'localhost';
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 3002;
 
 // Import your API routes
 const api = require('./api/app');

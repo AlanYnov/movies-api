@@ -31,7 +31,7 @@ To get started with the Events API, follow the instructions below:
 
 4. **Database Setup:** Configure your database and optionally run migrations or seed data.
 
-5. **Start the Server:** Run `npm start` to start the API server. By default, it runs on port 4000, but you can configure the port in your `.env` file.
+5. **Start the Server:** Run `npm start` to start the API server. By default, it runs on port 3002, but you can configure the port in your `.env` file.
 
 6. **API Documentation:** Explore the API endpoints and their documentation using Swagger UI. The documentation is accessible at `/api-docs` when the API server is running.
 
